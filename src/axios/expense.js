@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const JSON_SERVER_HOST = "http://localhost:5000";
+const JSON_SERVER_HOST = "https://striped-fuchsia-event.glitch.me";
 
 export const fetchExpenses = async () => {
   try {

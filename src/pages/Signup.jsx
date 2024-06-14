@@ -1,15 +1,52 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { register } from "../axios/auth";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    if (id.length < 4 || id.length > 10) {
+      alert("아이디는 4글자에서 10글자 이내로만 가능합니다.");
+      return;
+    }
+    if (password.length < 4 || password.length > 15) {
+      alert("비밀번호는 4글자에서 15글자 이내로만 가능합니다.");
+      return;
+    }
+    if (nickname.length < 1 || nickname.length > 10) {
+      alert("닉네임은 1글자에서 10글자 이내로만 가능합니다.");
+      return;
+    }
+
+    const response = await register({
+      id: id,
+      password: password,
+      nickname: nickname,
+    });
+
+    if (response.success) {
+      toast.success("회원가입이 완료됐습니다!", {
+        onClose: () => navigate("/login"),
+      });
+    } else {
+      toast.error("회원가입에 실패했습니다. 다시 시도해 주세요.");
+    }
+  };
   return (
     <Container>
       <StH2>회원가입</StH2>
       <StIdPwNameContainer>
-        <Stlabel htmlFor="id">아이디</Stlabel>
-        <StInput
+        <label htmlFor="id">아이디</label>
+        <input
           type="text"
+          onChange={(e) => setId(e.target.value)}
           id="id"
           placeholder="아이디"
           minLength="4"
@@ -17,9 +54,10 @@ const Signup = () => {
         />
       </StIdPwNameContainer>
       <StIdPwNameContainer>
-        <Stlabel htmlFor="password">비밀번호</Stlabel>
-        <StInput
+        <label htmlFor="password">비밀번호</label>
+        <input
           type="password"
+          onChange={(e) => setPassword(e.target.value)}
           id="password"
           placeholder="비밀번호"
           minLength="4"
@@ -27,23 +65,36 @@ const Signup = () => {
         />
       </StIdPwNameContainer>
       <StIdPwNameContainer>
-        <Stlabel htmlFor="nickname">닉네임</Stlabel>
-        <StInput
+        <label htmlFor="nickname">닉네임</label>
+        <input
           type="text"
+          onChange={(e) => setNickname(e.target.value)}
           id="nickname"
           placeholder="닉네임"
           minLength="1"
           maxLength="10"
         />
       </StIdPwNameContainer>
-      <StSignupBtn>회원가입</StSignupBtn>
+      <StSignupBtn onClick={handleRegister}>회원가입</StSignupBtn>
       <StLoginBtn
         onClick={() => {
           navigate("/login");
         }}
       >
-        로그인
+        돌아가기
       </StLoginBtn>
+      <ToastContainer
+        position="top-right" // 알람 위치 지정
+        autoClose={3000} // 자동 off 시간
+        hideProgressBar={false} // 진행시간바 숨김
+        closeOnClick // 클릭으로 알람 닫기
+        rtl={false} // 알림 좌우 반전
+        pauseOnFocusLoss // 화면을 벗어나면 알람 정지
+        draggable // 드래그 가능
+        pauseOnHover // 마우스를 올리면 알람 정지
+        theme="light"
+        // limit={1} // 알람 개수 제한
+      />
     </Container>
   );
 };
@@ -65,17 +116,16 @@ const StH2 = styled.h2`
 
 const StIdPwNameContainer = styled.div`
   margin-bottom: 15px;
-`;
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
 
-const Stlabel = styled.label`
-  display: block;
-  margin-bottom: 5px;
-`;
-
-const StInput = styled.input`
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+  input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
 `;
 
 const StLoginBtn = styled.button`
@@ -92,10 +142,14 @@ const StLoginBtn = styled.button`
 const StSignupBtn = styled.button`
   width: 100%;
   padding: 10px;
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(0, 123, 255);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 10px;
+
+  &:disabled {
+    background-color: rgb(160, 160, 160);
+  }
 `;

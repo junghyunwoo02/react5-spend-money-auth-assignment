@@ -1,0 +1,88 @@
+{
+  "expenses": [
+    {
+      "date": "2024-01-03",
+      "item": "개인사업",
+      "amount": 1000000001,
+      "description": "도지 코인 가즈아",
+      "id": "46869445-5f9c-4650-941f-41bd9457bc07",
+      "createdBy": "멜론 머스크",
+      "userId": "0204"
+    },
+    {
+      "date": "2024-01-07",
+      "item": "개인사업",
+      "amount": 1000000000000,
+      "description": "화성 갈끄니까",
+      "id": "a5c0d8de-d010-4d07-9934-29765051a7ea",
+      "createdBy": "멜론 머스크",
+      "userId": "0204"
+    },
+    {
+      "id": "0d0a966e-5c35-4bf0-aca4-f2b1265a432d",
+      "month": 1,
+      "date": "2024-01-13",
+      "item": "식비",
+      "amount": 2000,
+      "description": "메가울트라킹제네럴갓왕짱커피",
+      "createdBy": "Rosie",
+      "userId": "41bd966c07-5e3c-4130-941f"
+    },
+    {
+      "id": "9aba6d72-5ee7-4f02-a4d4-e8bbff9ded4b",
+      "month": 1,
+      "date": "2024-01-17",
+      "item": "식비",
+      "amount": 21000,
+      "description": "이건못참치",
+      "createdBy": "Rosie",
+      "userId": "41efde21c07-5f9c-4650-941f"
+    },
+    {
+      "id": "b82b213e-8164-4c89-94b0-7246cdcfc4f9",
+      "month": 1,
+      "date": "2024-01-21",
+      "item": "식비",
+      "amount": 412000,
+      "description": "밤양갱 사재기",
+      "createdBy": "Me",
+      "userId": "41abeddwc07-5f9c-4650-941f"
+    },
+    {
+      "id": "d180194f-7c27-428a-8cd9-ad9114e58821",
+      "month": 1,
+      "date": "2024-01-22",
+      "item": "도서",
+      "amount": 23000,
+      "description": "박정환 맵 마스터",
+      "createdBy": "Me",
+      "userId": "41eeqwwc07-5f9c-4650-941f"
+    },
+    {
+      "date": "2024-01-30",
+      "item": "외식",
+      "amount": 100000,
+      "description": "선배마라탕후루",
+      "id": "0abf06c3-8f0e-4ea1-9691-7facab0a91cb",
+      "createdBy": "후배 여자애",
+      "userId": "0qweqwe"
+    },
+    {
+      "id": "53f7f1a3-2358-7d8d-3ee6-8d4eac407146",
+      "date": "2024-01-31",
+      "item": "간식",
+      "description": "네가 만든 쿠키",
+      "amount": "5000000",
+      "createdBy": "jim9649"
+    },
+    {
+      "id": "edd8e0f4-4ec7-8177-016b-052196a51317",
+      "date": "2024-06-14",
+      "item": "식비",
+      "description": "아이스크림12",
+      "amount": 500000,
+      "createdBy": "아오 좀",
+      "userId": "jim9649"
+    }
+  ]
+}

@@ -1,8 +1,21 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
+import { postExpense } from "../axios/expense";
+import { useNavigate } from "react-router-dom";
 
-const InputForm = ({ expenseData, setExpenseData }) => {
+const InputForm = ({ user }) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: postExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["expense"]);
+      navigate(0);
+    },
+  });
+
   const [formData, setFormData] = useState({
     date: "",
     item: "",
@@ -33,15 +46,18 @@ const InputForm = ({ expenseData, setExpenseData }) => {
       return;
     }
 
-    const newData = {
+    const newExpense = {
       id: uuid(),
       date: formData.date,
       item: formData.item,
       description: formData.description,
       amount: formData.amount,
+      createdBy: user.nickname,
+      userId: user.userId,
     };
 
-    setExpenseData([...expenseData, newData]);
+    mutate(newExpense);
+
     setFormData({
       date: "",
       item: "",

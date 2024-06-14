@@ -13,7 +13,7 @@ const ExpenseCard = ({ data }) => {
       <SpanDiv>
         <span>{data.date}</span>
         <span>
-          {data.item} - {data.description}
+          {data.item} - {data.description} (by {data.createdBy})
         </span>
       </SpanDiv>
       <WonSpan>{Number(data.amount).toLocaleString("ko-KR")}원</WonSpan>

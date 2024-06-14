@@ -1,76 +1,90 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import {
+  deleteExpense,
+  fetchExpenseById,
+  patchExpense,
+} from "../axios/expense";
 
-const Detail = ({ expenseData, setExpenseData }) => {
+const ExpenseDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate(); // URL 파라미터에서 ID를 가져옴
+
+  const {
+    data: selectedExpense,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["expense", id],
+    queryFn: fetchExpenseById,
+  });
+
+  const mutationEdit = useMutation({
+    mutationFn: patchExpense,
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+
+  const mutationDelete = useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+
   // useRef를 사용하여 각 입력 필드의 참조를 생성
   const dateRef = useRef(null);
   const itemRef = useRef(null);
   const amountRef = useRef(null);
   const descriptionRef = useRef(null);
 
-  const navigate = useNavigate();
-  const { id } = useParams(); // URL 파라미터에서 ID를 가져옴
-  const expense = expenseData.find((item) => item.id === id); // 현재 id와 일치하는 지출 항목 찾기
-
   useEffect(() => {
-    if (expense) {
-      // expense 데이터를 사용하여 입력 필드의 초기 값을 설정
-      dateRef.current.value = expense.date || "";
-      itemRef.current.value = expense.item || "";
-      amountRef.current.value = Number(expense.amount) || "";
-      descriptionRef.current.value = expense.description || "";
-    }
-
-    // 첫 번째 입력 필드에 포커스 설정
-    if (itemRef.current) {
+    if (selectedExpense) {
+      // 선택된 지출 항목의 데이터를 사용하여 입력 필드의 초기 값을 설정
+      dateRef.current.value = selectedExpense.date || "";
+      itemRef.current.value = selectedExpense.item || "";
+      amountRef.current.value = selectedExpense.amount || "";
+      descriptionRef.current.value = selectedExpense.description || "";
       itemRef.current.focus();
     }
-  }, [expense]);
+  }, [selectedExpense]);
 
   const handleUpdate = () => {
-    // 각 입력 필드에서 현재 값 가져오기
-    const updatedDate = dateRef.current.value;
-    const updatedItem = itemRef.current.value;
-    const updatedAmount = amountRef.current.value;
-    const updatedDescription = descriptionRef.current.value;
+    // 수정된 지출 항목 객체를 생성
+    const editExpense = {
+      id: selectedExpense.id, // 선택된 지출 항목의 ID
+      date: dateRef.current.value, // 날짜 입력 필드의 현재 값
+      item: itemRef.current.value, // 항목 입력 필드의 현재 값
+      amount: Number(amountRef.current.value), // 금액 입력 필드의 현재 값 (숫자로 변환)
+      description: descriptionRef.current.value, // 내용 입력 필드의 현재 값
+    };
 
-    if (!updatedDate || !updatedItem || !updatedAmount || !updatedDescription) {
+    // 모든 필드가 채워져 있는지 확인
+    if (
+      !editExpense.date ||
+      !editExpense.item ||
+      !editExpense.amount ||
+      !editExpense.description
+    ) {
       alert("입력창에 모두 입력해주세요.");
       return;
     }
 
-    // 수정된 지출 항목 객체 생성
-    const updatedExpense = {
-      id: expense.id,
-      date: updatedDate,
-      item: updatedItem,
-      amount: updatedAmount,
-      description: updatedDescription,
-    };
-
-    // 기존 expenseData에서 수정된 항목을 업데이트
-    const updatedExpenseData = expenseData.map((item) =>
-      item.id === id ? updatedExpense : item
-    );
-
-    // 업데이트된 expenseData를 상태로 설정
-    setExpenseData(updatedExpenseData);
-    // 수정 후에는 메인 페이지로 이동
-    navigate("/");
+    // 수정된 지출 항목 객체를 전달하여 서버에 수정 요청을 전송
+    mutationEdit.mutate(editExpense);
   };
 
   const handleDelete = () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
-      // 현재 id와 일치하지 않는 항목만 필터링하여 새로운 데이터를 생성
-      const updatedExpenseData = expenseData.filter((item) => item.id !== id);
-      // 삭제된 데이터를 상태로 설정
-      setExpenseData(updatedExpenseData);
-
-      // 삭제 후에는 메인 페이지로 이동
-      navigate("/");
+      mutationDelete.mutate(id);
     }
   };
+
+  if (isLoading) return <div>로딩 중입니다...</div>;
+  if (error) return <div>로딩 중 오류가 발생했습니다.</div>;
 
   return (
     <StContainer>
@@ -109,7 +123,7 @@ const Detail = ({ expenseData, setExpenseData }) => {
   );
 };
 
-export default Detail;
+export default ExpenseDetail;
 
 const StContainer = styled.div`
   max-width: 800px;
